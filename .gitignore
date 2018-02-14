@@ -1,0 +1,8 @@
+bower_components/
+build/
+node_modules/
+.idea/
+*.iml
+
+*.sublime-workspace
+*.sublime-project
