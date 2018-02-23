@@ -25,6 +25,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         padding: 10px;
       }
+
+      .info {
+        background-color: #d9edf7;
+        border-color: #bcdff1;
+        color: #31708f;
+      }
+
+      .warning {
+        background-color: #fcf8e3;
+        border-color: #faf2cc;
+        color: #8a6d3b;
+      }
+
+      .error {
+        background-color: #f2dede;
+        border-color: #ebcccc;
+        color: #a94442;
+      }
     </style>
 
     <div class="card">
@@ -38,6 +56,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         Save file
       </paper-button>
     </div>
+
+    <div id="messages" class$="card alert {{status}}" hidden$={{hidden}}></div>
 
     <iron-ajax id="ajaxPost" method="POST" on-response="handleResponse"
       last-response="lastResponse" on-error="handleError">
@@ -53,8 +73,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           upload: {
             type: String,
             value: '/uploadFile'
+          },
+          hidden: {
+            type: Boolean,
+            value: true
+          },
+          status: {
+            type: String
           }
         };
+      }
+
+      _cleanMessage() {
+        this.$.messages.innerHTML = '';
+        this.hidden = true;
       }
 
       _uploadFile() {
@@ -69,20 +101,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.ajaxPost.url = this.upload;
         this.$.ajaxPost.body = formData;
         this.$.ajaxPost.generateRequest();
+
+        this._cleanMessage();
       }
 
       handleResponse(e) {
         let response = this.$.ajaxPost.lastResponse;
         if (response !== null) {
-          console.log(response);
+          let msg = '<ul>';
+          for (var x = 0; x < response.length; x++) {
+            msg = msg.concat('<li>').concat(response[x].name).concat('</li>');
+          }
+          msg = msg.concat('</ul>');
+          this.hidden = false;
+          this.status = 'info';
+          this.$.messages.innerHTML = msg;
         }
       }
 
       handleError(e) {
-        let error = e.detail.request.xhr.response;
-        if (error !== null) {
-          console.log(error);
-        }
+        this.hidden = false;
+        this.status = 'error';
+        this.$.messages.innerHTML = 'Error al cargar los archivos.';
+        this.$.file.value = null;
       }
     }
 
