@@ -32,7 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h1>View One</h1>
       <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
       <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
-      <iron-label>Upload File: <input is="iron-input" id="file" title="Load" type="file"></iron-label>
+      <iron-label>Upload File: <input is="iron-input" id="file" title="Load" type="file" multiple="true"></iron-label>
       <paper-button raised on-tap="_uploadFile">
         <iron-icon icon="icons:cloud-upload"></iron-icon>
         Save file
@@ -62,7 +62,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return;
         }
         var formData = new FormData();
-        formData.append('file', this.$.file.files[0]);
+        for (var x = 0; x < this.$.file.files.length; x++) {
+          formData.append('files', this.$.file.files[x]);
+        }
         this.$.ajaxPost.contentType = undefined;
         this.$.ajaxPost.url = this.upload;
         this.$.ajaxPost.body = formData;
