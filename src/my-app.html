@@ -20,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="my-icons.html">
 
 <link rel="lazy-import" href="my-view1.html">
@@ -114,6 +115,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
+
+    <iron-ajax id="getInfo"
+        content-type="application/json"
+        handle-as="json"
+        method="GET"
+        on-response="_handleResponse"
+        last-response="lastResponse"
+        on-error="_handleError">
+      </iron-ajax>
   </template>
 
   <script>
@@ -145,10 +155,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready() {
         super.ready();
-        this.token = loadURL('GET', document.origin.concat('/token'));
-        if (this.token !== undefined) {
-          this.user = loadURL('GET', document.origin.concat('/profile?userId=').concat(this.token.sub));
-        }
+        this.$.getInfo.url = document.origin.concat('/token');
+        this.$.getInfo.generateRequest();
       }
 
       _routePageChanged(page) {
@@ -170,6 +178,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _showPage404() {
         this.page = 'view404';
+      }
+
+      _handleResponse(event, request) {
+        if (200 === request.status && this.user === undefined) {
+          this.token = this.$.getInfo.lastResponse;
+
+          this.$.getInfo.url = document.origin.concat('/profile?userId=').concat(this.token.sub);
+          this.$.getInfo.generateRequest();
+        } else if (200 === request.status && this.token !== undefined) {
+          this.user = this.$.getInfo.lastResponse;
+        } else {
+          console.log(this.$.getInfo.lastResponse);
+        }
+      }
+
+      _handleError(event) {
+        var error = event.detail.request.xhr.response;
+        if (error !== null) {
+          console.log(error);
+        }
       }
     }
 
