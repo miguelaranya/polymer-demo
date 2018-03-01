@@ -181,9 +181,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _handleResponse(event, request) {
-        if (200 === request.status && this.user === undefined) {
+        if (200 === request.status && this.token === undefined) {
           this.token = this.$.getInfo.lastResponse;
-
           this.$.getInfo.url = document.origin.concat('/profile?userId=').concat(this.token.sub);
           this.$.getInfo.generateRequest();
         } else if (200 === request.status && this.token !== undefined) {
