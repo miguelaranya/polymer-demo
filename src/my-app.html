@@ -132,6 +132,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
+          token: Object,
+          user: Object
         };
       }
 
@@ -143,7 +145,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready() {
         super.ready();
-        openURL('GET', document.origin.concat('/token'));
+        this.token = loadURL('GET', document.origin.concat('/token'));
+        if (this.token !== undefined) {
+          this.user = loadURL('GET', document.origin.concat('/profile?userId=').concat(this.token.sub));
+        }
       }
 
       _routePageChanged(page) {

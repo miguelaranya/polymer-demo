@@ -105,9 +105,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </head>
   <body>
     <script>
-      var tags, token_user;
+      var tags;
 
-      function openURL(method, url, payload) {
+      function loadURL(method, url, payload) {
         let xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
           if (xhr.readyState === 4) {
@@ -118,14 +118,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             let isHtml;
             if (basic.test(xhr.response) || full.test(xhr.response)) {
-              token_user = undefined;
+              return undefined;
             } else {
-              token_user = JSON.parse(xhr.response);
+              return JSON.parse(xhr.response);
             }
           }
         }
         xhr.open(method, url, true);
-        xhr.send('');
+        xhr.send(payload);
       }
 
       function parseToken(token) {
