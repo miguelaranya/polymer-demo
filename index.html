@@ -107,27 +107,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script>
       var tags;
 
-      function loadURL(method, url, payload) {
-        let xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4) {
-            let basic = /\s?<!doctype html>|(<html\b[^>]*>|<body\b[^>]*>|<x-[^>]+>)+/i;
-            let full = new RegExp(tags.map(function (el) {
-              return '<' + el + '\\b[^>]*>';
-            }).join('|'), 'i');
-
-            let isHtml;
-            if (basic.test(xhr.response) || full.test(xhr.response)) {
-              return undefined;
-            } else {
-              return JSON.parse(xhr.response);
-            }
-          }
-        }
-        xhr.open(method, url, true);
-        xhr.send(payload);
-      }
-
       function parseToken(token) {
         let base64URL = token.split('.')[1];
         let base64 = base64URL.replace('-', '+').replace('_', '/');
