@@ -158,11 +158,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready() {
         super.ready();
 
-        this.$.profileCard.$.alignedDialog.style.maxWidth = '350px';
-        this.$.profileCard.$.alignedDialog.style.width = '350px';
+        this.$.profileCard.$.alignedDialog.style.maxWidth = '280px';
+        this.$.profileCard.$.alignedDialog.style.width = '280px';
 
-        let child = this.$.profileCard.$.alignedDialog.getElementsByClassName('card-header')[0];
-        child.children[0].innerHTML = 'This account is managed by Entelgy.';
+        let childCard = this.$.profileCard.$.alignedDialog.getElementsByClassName('card-header')[0];
+        this.$.profileCard.$.alignedDialog.removeChild(childCard);
+
+        let childProfile = this.$.profileCard.$.alignedDialog.getElementsByClassName('profile-container')[0];
+        childProfile.style.gridTemplateColumns="64px 1fr";
+        childProfile.style.gridGap="10px";
+        childProfile.style.fontSize="12px";
+        childProfile.firstElementChild.size="64px";
+        childProfile.firstElementChild.style.height="64px";
 
         this.$.getInfo.url = document.origin.concat('/token');
         this.$.getInfo.generateRequest();
