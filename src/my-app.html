@@ -165,11 +165,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.profileCard.$.alignedDialog.removeChild(childCard);
 
         let childProfile = this.$.profileCard.$.alignedDialog.getElementsByClassName('profile-container')[0];
-        childProfile.style.gridTemplateColumns="64px 1fr";
+        childProfile.style.gridTemplateColumns="48px 1fr";
         childProfile.style.gridGap="10px";
         childProfile.style.fontSize="12px";
-        childProfile.firstElementChild.size="64px";
-        childProfile.firstElementChild.style.height="64px";
+        childProfile.firstElementChild.size="48px";
+        childProfile.firstElementChild.style.height="48px";
 
         this.$.getInfo.url = document.origin.concat('/token');
         this.$.getInfo.generateRequest();
