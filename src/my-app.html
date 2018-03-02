@@ -21,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/profile-card/profile-card.html">
 <link rel="import" href="my-icons.html">
 
 <link rel="lazy-import" href="my-view1.html">
@@ -99,6 +100,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <app-toolbar>
             <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>My App</div>
+            <profile-card id="profileCard" popout-direction="right"></profile-card>
           </app-toolbar>
         </app-header>
 
@@ -155,6 +157,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready() {
         super.ready();
+
+        this.$.profileCard.$.alignedDialog.style.maxWidth = '350px';
+        this.$.profileCard.$.alignedDialog.style.width = '350px';
+
+        let child = this.$.profileCard.$.alignedDialog.getElementsByClassName('card-header')[0];
+        child.children[0].innerHTML = 'This account is managed by Entelgy.';
+
         this.$.getInfo.url = document.origin.concat('/token');
         this.$.getInfo.generateRequest();
       }
@@ -183,10 +192,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _handleResponse(event, request) {
         if (200 === request.status && this.token === undefined) {
           this.token = this.$.getInfo.lastResponse;
-          this.$.getInfo.url = document.origin.concat('/profile?userId=').concat(this.token.sub);
-          this.$.getInfo.generateRequest();
+          if (this.token !== null) {
+            this.$.getInfo.url = document.origin.concat('/profile?userId=').concat(this.token.sub);
+            this.$.getInfo.generateRequest();
+          }
         } else if (200 === request.status && this.token !== undefined) {
           this.user = this.$.getInfo.lastResponse;
+
+          this.$.profileCard.profile = {
+            "name": this.user.displayName,
+            "email": this.token.email,
+            "image": this.user.image.url
+          };
         } else {
           console.log(this.$.getInfo.lastResponse);
         }
