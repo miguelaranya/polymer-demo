@@ -244,7 +244,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _disconnect(evt) {
         evt.stopPropagation();
-        console.log("Desconectando usuario: ".concat(this.token.email));
+        window.location.href = window.location.origin.concat('/_gcp_iap/clear_login_cookie');
       }
     }
 
