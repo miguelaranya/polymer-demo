@@ -1,0 +1,158 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-label/iron-label.html">
+<link rel="import" href="../../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="tab-panel-item.html">
+
+<dom-module id="tab-panel">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      /* Style the tab */
+      .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+      }
+
+      /* Style the buttons inside the tab */
+      .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+      }
+
+      /* Change background color of buttons on hover */
+      .tab button:hover {
+        background-color: #ddd;
+      }
+
+      /* Create an active/current tablink class */
+      .tab button.active {
+        background-color: #ccc;
+      }
+
+      /* Style the tab content */
+      .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-top: none;
+      }
+    </style>
+
+    <div id="cardPanel" class="card">
+      <div id="tabPanel" class="tab">
+        <button id="buttonPanel" class="tablinks" on-tap="_create">+</button>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    class TabPanel extends Polymer.Element {
+      static get is() { return 'tab-panel'; }
+
+      static get properties() {
+        return {
+          name: {
+            type: String,
+            value: 'default-'
+          },
+          index: {
+            type: Number,
+            value: 0
+          },
+          itemBefore: {
+            type: Object,
+            value: undefined
+          },
+          contentBefore: {
+            type: Object,
+            value: undefined
+          }
+        };
+      }
+
+      _create() {
+        let defaultName = this.name.concat(this.index);
+        let button = document.createElement('button');
+        button.appendChild(document.createTextNode(defaultName));
+        button.classList.add('tablinks');
+        button.addEventListener('click', e => this._click(e, defaultName));
+        this.$.tabPanel.insertBefore(button, this.$.buttonPanel);
+        this.index++;
+      }
+
+      _click(event, value) {
+        this._open(event, value); 
+      }
+
+      _open(event, value) {
+        event.stopPropagation();
+        this._appliedStyles(event.currentTarget);
+      }
+
+      _appliedStyles(item) {
+        if (item.className.search("active") === -1) {
+          item.className += " active";
+          if (this.itemBefore !== undefined) {
+            this.itemBefore.className = this.itemBefore.className.replace(" active", "");
+            this.contentBefore = this.itemBefore;
+          }
+          this.itemBefore = item;
+        } else {
+          item.className = item.className.replace(" active", "");
+          this.contentBefore = item;
+          this.itemBefore = undefined;
+        }
+        this._createDiv(item);
+      }
+
+      _createDiv(item) {
+        if (this.itemBefore !== undefined && this.shadowRoot.querySelector('#' + this.itemBefore.textContent) === null) {
+          let content = document.createElement("div");
+          content.id = this.itemBefore.textContent;
+          content.className = "tabcontent";
+
+          let child = document.createElement('tab-panel-item');
+          child.format = content.id;
+          content.appendChild(child);
+
+          this.$.cardPanel.appendChild(content, this.$.tabPanel);  
+        }
+        if (this.contentBefore !== undefined) {
+          let selector = this.shadowRoot.querySelector('#' + this.contentBefore.textContent);
+          selector.style.display = "none";
+        }
+        if (this.itemBefore !== undefined) {
+          let selector2 = this.shadowRoot.querySelector('#' + this.itemBefore.textContent);
+          selector2.style.display = "block";
+          console.log(selector2);
+        }
+      }
+    }
+
+    window.customElements.define(TabPanel.is, TabPanel);
+  </script>
+</dom-module>
