@@ -162,6 +162,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready() {
         super.ready();
         this._updateStyleReady();
+        this.$.profileCard.addEventListener('logout', e => this._disconnect(e));
         this.$.getInfo.url = document.origin.concat('/token');
         this.$.getInfo.generateRequest();
       }
@@ -239,6 +240,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _mouseOver(evt, profile) {
         evt.stopPropagation();
         evt.path[1].children[1].title = profile.name.concat('\n').concat(profile.email);
+      }
+
+      _disconnect(evt) {
+        evt.stopPropagation();
+        console.log("Desconectando usuario: ".concat(this.token.email));
       }
     }
 
