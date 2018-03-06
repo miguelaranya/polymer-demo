@@ -25,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <paper-input value="{{format}}" label="Ingrese nombre de formato" 
+    <paper-input value="{{formatName}}" label="Ingrese nombre de formato" 
           prevent-invalid-input allowed-pattern="^[a-zA-Z0-9\-]*$"></paper-input>
   </template>
 
@@ -35,8 +35,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get properties() {
         return {
-          format: String
+          formatName: {
+            type: String,
+            value: ''
+          }
         };
+      }
+
+      ready() {
+        super.ready();
       }
     }
 

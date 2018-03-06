@@ -136,10 +136,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           content.className = "tabcontent";
 
           let child = document.createElement('tab-panel-item');
-          child.format = content.id;
+          child.id = content.id;
+          child.formatName = content.id;
           content.appendChild(child);
 
-          this.$.cardPanel.appendChild(content, this.$.tabPanel);  
+          this.$.cardPanel.appendChild(content, this.$.tabPanel);
         }
         if (this.contentBefore !== undefined) {
           let selector = this.shadowRoot.querySelector('#' + this.contentBefore.textContent);
@@ -148,7 +149,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (this.itemBefore !== undefined) {
           let selector2 = this.shadowRoot.querySelector('#' + this.itemBefore.textContent);
           selector2.style.display = "block";
-          console.log(selector2);
+          console.log(this.shadowRoot.querySelectorAll('tab-panel-item'));
         }
       }
     }
