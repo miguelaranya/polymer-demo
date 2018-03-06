@@ -41,6 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 14px 16px;
         transition: 0.3s;
         font-size: 17px;
+        text-transform: uppercase;
       }
 
       /* Change background color of buttons on hover */
@@ -141,6 +142,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           content.appendChild(child);
 
           this.$.cardPanel.appendChild(content, this.$.tabPanel);
+          child.$.inputFormat.addEventListener('change', e => this._changeEvent(e, content, this.itemBefore));
         }
         if (this.contentBefore !== undefined) {
           let selector = this.shadowRoot.querySelector('#' + this.contentBefore.textContent);
@@ -150,6 +152,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           let selector2 = this.shadowRoot.querySelector('#' + this.itemBefore.textContent);
           selector2.style.display = "block";
         }
+      }
+
+      _changeEvent(evt, parentElement, itemSelected) {
+        evt.stopPropagation();
+        let selector = parentElement.querySelector('#' + parentElement.id);
+        parentElement.id = selector.$.inputFormat.value;
+        selector.id = selector.$.inputFormat.value;
+        itemSelected.textContent = selector.$.inputFormat.value;
       }
     }
 
